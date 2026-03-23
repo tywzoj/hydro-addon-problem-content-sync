@@ -1,3 +1,2 @@
-export function apply() {
-    console.log("Hello, world!");
-}
+export { Config } from "./src/config";
+export { apply } from "./src/main";

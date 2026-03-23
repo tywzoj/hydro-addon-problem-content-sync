@@ -13,7 +13,7 @@ export function applyDisableEditReferred(ctx: Context) {
         }
     });
 
-    ctx.on("handler/after/ProblemDetailHandler", (handler: ProblemDetailHandler) => {
+    ctx.on("handler/after/ProblemDetailHandler#get", (handler: ProblemDetailHandler) => {
             handler.UiContext.disableEditReferredProblem = ctx.setting.get(getSettingKeys(CE_ConfigKey.DisableEditReferredProblem));
             if (handler.pdoc.reference) {
                 handler.UiContext.originalProblemUrl = handler.url("problem_detail", {

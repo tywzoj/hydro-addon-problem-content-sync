@@ -13,11 +13,13 @@ export function applyDistributeChange(ctx: Context) {
         }
         if (!handler.args[ARGS_DISTRIBUTE]) return;
 
+        // The problem document has been updated, but handler.pdoc is not updated yet,
+        // so we need to get the latest problem document here.
         const pdoc = (await ProblemModel.get(handler.pdoc.domainId, handler.pdoc.docId))!;
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        const cursor = ProblemModel.getMulti(undefined /* Do not set domainId filter */, {
+        const cursor = ProblemModel.getMulti(undefined /* do not set domainId filter */, {
             reference: {
                 domainId: pdoc.domainId,
                 pid: pdoc.docId,

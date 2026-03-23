@@ -20,5 +20,10 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@1.22.22",
+  "name": "hydro-addon-problem-content-sync",
+  "version": "1.0.0",
+  "description": "Hydro addon to sync or distribute changes between original and referred problem",
+  "repository": "https://github.com/tywzoj/hydro-addon-problem-content-sync.git",
+  "author": "Antares <antares.mi@outlook.com>"
 }

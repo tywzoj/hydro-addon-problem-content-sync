@@ -1,6 +1,6 @@
 import { Schema } from "hydrooj";
 
-import { CE_StringKey } from "./strings";
+import { CE_StringKey } from "../common/strings";
 
 export const enum CE_ConfigKey {
     DisableEditReferredProblem = "disable_edit_referred_problem",

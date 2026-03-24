@@ -1,5 +1,5 @@
 import type { Context } from "hydrooj";
-import { ProblemModel } from "hydrooj";
+import { PermissionError, PRIV, ProblemModel } from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
 import { ARGS_DISTRIBUTE } from "../common/constants";
@@ -13,6 +13,12 @@ export function applyDistributeChange(ctx: Context) {
             return;
         }
         if (!handler.args[ARGS_DISTRIBUTE]) return;
+
+        // It is not easy to check the permission for each referred problem in other domains,
+        // so we only allow users with MANAGE_ALL_DOMAIN privilege to perform distribute change operation.
+        if (!handler.user.hasPriv(PRIV.PRIV_MANAGE_ALL_DOMAIN)) {
+            throw new PermissionError(CE_StringKey.DistributeChangeNoPrivilege);
+        }
 
         // The problem document has been updated, but handler.pdoc is not updated yet,
         // so we need to get the latest problem document here.
@@ -32,18 +38,18 @@ export function applyDistributeChange(ctx: Context) {
 
         const t = `,${handler.domain.share || ""},`;
         for await (const pdoc of cursor) {
-            if (t === ",*," || t.includes(`,${pdoc.domainId},`)) {
-                await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
-                handler.progress(CE_StringKey.DistributeChangeNotice, [pdoc.pid, pdoc.domainId]);
-            } else {
+            if (t !== ",*," && !t.includes(`,${handler.pdoc.domainId},`)) {
                 handler.progress(CE_StringKey.DistributeChangeSkipNotice, [pdoc.pid, pdoc.domainId]);
+                continue;
             }
+            await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
+            handler.progress(CE_StringKey.DistributeChangeNotice, [pdoc.pid, pdoc.domainId]);
         }
     });
 
     ctx.on("handler/after/ProblemEdit#get", (handler: ProblemEditHandler) => {
-        getUiContext(handler).allowDistributeProblemChange = ctx.setting.get(
-            getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange),
-        ) as boolean;
+        getUiContext(handler).allowDistributeProblemChange =
+            (ctx.setting.get(getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange)) as boolean) &&
+            handler.user.hasPriv(PRIV.PRIV_MANAGE_ALL_DOMAIN);
     });
 }

@@ -9,6 +9,7 @@ export const enum CE_StringKey {
     DistributeChange = "Distribute change to referred problems in other domains",
     DistributeChangeNotice = "Problem {0} in domain {1} has been updated due to changes in the original problem.",
     DistributeChangeSkipNotice = "Problem {0} in domain {1} is skipped for distribution because its domain isn't allowed to refer the original problem.",
+    DistributeChangeNoPrivilege = "You don't have permission to distribute problem changes.",
     SyncWithOriginalProblem = "Sync with original problem",
     ConfirmSyncWithOriginalProblem = "Are you sure you want to sync with the original problem? This will overwrite the current problem content.",
 }
@@ -25,6 +26,7 @@ const strings: Record<string, Record<CE_StringKey, string>> = {
         [CE_StringKey.DistributeChangeSkipNotice]: "在域 {1} 的题目 {0} 被跳过分发，因为其域不被允许引用原始题目。",
         [CE_StringKey.SyncWithOriginalProblem]: "与原题同步",
         [CE_StringKey.ConfirmSyncWithOriginalProblem]: "您确定要与原题同步吗？这将覆盖当前题目的内容。",
+        [CE_StringKey.DistributeChangeNoPrivilege]: "您没有权限分发题目变更。",
     },
     zh_TW: {
         [CE_StringKey.Title]: "題目內容同步插件",
@@ -37,6 +39,7 @@ const strings: Record<string, Record<CE_StringKey, string>> = {
         [CE_StringKey.DistributeChangeSkipNotice]: "在域 {1} 的題目 {0} 被跳過分發，因為其域不被允許引用原始題目。",
         [CE_StringKey.SyncWithOriginalProblem]: "與原題同步",
         [CE_StringKey.ConfirmSyncWithOriginalProblem]: "您確定要與原題同步嗎？這將覆蓋當前題目的內容。",
+        [CE_StringKey.DistributeChangeNoPrivilege]: "您沒有權限分發題目變更。",
     },
 };
 

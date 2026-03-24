@@ -26,6 +26,9 @@ declare module "hydrooj" {
 }
 
 export function applyProblemContentSync(ctx: Context) {
+    // We want to reuse the permission checker in ProblemEditHandler,
+    // so we implement a operation method into ProblemEditHandler,
+    // instead of creating a new route and handler.
     ctx.withHandlerClass("ProblemEditHandler", (HandlerClass) => {
         HandlerClass.prototype.postSyncWithOriginalProblem = async function () {
             const handler = this as ProblemEditHandler;

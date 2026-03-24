@@ -4,7 +4,7 @@ import { CE_StringKey } from "../common/strings";
 import type { IUiContext } from "../common/types";
 
 addPage(
-    new NamedPage(["problem_detail"], () => {
+    new NamedPage(["problem_detail", "contest_detail_problem", "homework_detail_problem"], () => {
         $(document).on("click", 'a[href$="/edit"]', (ev) => {
             const { disableEditReferredProblem, originalProblemUrl } = UiContext as IUiContext;
             if (disableEditReferredProblem && originalProblemUrl) {

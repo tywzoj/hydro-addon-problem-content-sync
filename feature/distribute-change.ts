@@ -32,8 +32,10 @@ export function applyDistributeChange(ctx: Context) {
     });
 
     ctx.on("handler/after/ProblemEditHandler#get", (handler: ProblemEditHandler) => {
-        getUiContext(handler).allowDistributeProblemChange = ctx.setting.get(
+        const uiContext = getUiContext(handler);
+        uiContext.allowDistributeProblemChange = ctx.setting.get(
             getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange),
         ) as boolean;
+        uiContext.isOriginalProblem = !handler.pdoc.reference;
     });
 }

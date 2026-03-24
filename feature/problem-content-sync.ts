@@ -1,4 +1,11 @@
-import { BadRequestError, type Context, ProblemModel, ProblemNotFoundError } from "hydrooj";
+import {
+    BadRequestError,
+    type Context,
+    DomainModel,
+    ProblemModel,
+    ProblemNotAllowCopyError,
+    ProblemNotFoundError,
+} from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
 import type { OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "../common/constants";
@@ -28,9 +35,15 @@ export function applyProblemContentSync(ctx: Context) {
             }
 
             const ori_pdoc = await ProblemModel.get(handler.pdoc.reference.domainId, handler.pdoc.reference.pid);
+            const ori_ddoc = await DomainModel.get(handler.pdoc.reference.domainId);
 
-            if (!ori_pdoc) {
+            if (!ori_pdoc || !ori_ddoc) {
                 throw new ProblemNotFoundError(handler.pdoc.reference.domainId, handler.pdoc.reference.pid);
+            }
+
+            const t = `,${ori_ddoc.share || ""},`;
+            if (t !== ",*," && !t.includes(`,${handler.pdoc.domainId},`)) {
+                throw new ProblemNotAllowCopyError(ori_pdoc.domainId, handler.pdoc.domainId);
             }
 
             await ProblemModel.edit(handler.pdoc.domainId, handler.pdoc.docId, buildProblemContentUpdate(ori_pdoc));

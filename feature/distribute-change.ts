@@ -18,17 +18,26 @@ export function applyDistributeChange(ctx: Context) {
         // so we need to get the latest problem document here.
         const ori_pdoc = (await ProblemModel.get(handler.pdoc.domainId, handler.pdoc.docId))!;
 
-        const cursor = ProblemModel.getMulti("" /* will be overridden by query */, {
-            domainId: { $exists: true },
-            reference: {
-                domainId: ori_pdoc.domainId,
-                pid: ori_pdoc.docId,
+        const cursor = ProblemModel.getMulti(
+            "" /* will be overridden by query */,
+            {
+                domainId: { $exists: true },
+                reference: {
+                    domainId: ori_pdoc.domainId,
+                    pid: ori_pdoc.docId,
+                },
             },
-        });
+            ["domainId", "docId", "pid"],
+        );
 
+        const t = `,${handler.domain.share || ""},`;
         for await (const pdoc of cursor) {
-            await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
-            handler.progress(CE_StringKey.DistributeChangeNotice, [pdoc.pid, pdoc.domainId]);
+            if (t === ",*," || t.includes(`,${pdoc.domainId},`)) {
+                await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
+                handler.progress(CE_StringKey.DistributeChangeNotice, [pdoc.pid, pdoc.domainId]);
+            } else {
+                handler.progress(CE_StringKey.DistributeChangeSkipNotice, [pdoc.pid, pdoc.domainId]);
+            }
         }
     });
 

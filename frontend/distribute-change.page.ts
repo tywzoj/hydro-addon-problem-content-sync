@@ -8,7 +8,7 @@ addPage(
     new NamedPage(["problem_edit"], () => {
         const { allowDistributeProblemChange, isOriginalProblem } = UiContext as IUiContext;
         if (allowDistributeProblemChange && isOriginalProblem) {
-            $(".section__body form").append(`
+            $(".section__body form").find(".row").last().before(`
 <div class="row"><div class="column">
     <label><br>
         <label class="checkbox">

@@ -7,7 +7,7 @@ import { buildProblemContentUpdate, getUiContext } from "../common/utils";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDistributeChange(ctx: Context) {
-    ctx.on("handler/after/ProblemEditHandler#post", async (handler: ProblemEditHandler) => {
+    ctx.on("handler/after/ProblemEdit#post", async (handler: ProblemEditHandler) => {
         if (!ctx.setting.get(getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange))) {
             return;
         }
@@ -31,7 +31,7 @@ export function applyDistributeChange(ctx: Context) {
         }
     });
 
-    ctx.on("handler/after/ProblemEditHandler#get", (handler: ProblemEditHandler) => {
+    ctx.on("handler/after/ProblemEdit#get", (handler: ProblemEditHandler) => {
         const uiContext = getUiContext(handler);
         uiContext.allowDistributeProblemChange = ctx.setting.get(
             getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange),

@@ -2,8 +2,8 @@ import type { Context } from "hydrooj";
 import { ProblemModel } from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
-import { ARGS_DISTRIBUTE, UI_CONTEXT_ALLOW_DISTRIBUTE_PROBLEM_CHANGE } from "../common/constants";
-import { buildProblemContentUpdate } from "../common/utils";
+import { ARGS_DISTRIBUTE } from "../common/constants";
+import { buildProblemContentUpdate, getUiContext } from "../common/utils";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDistributeChange(ctx: Context) {
@@ -32,7 +32,7 @@ export function applyDistributeChange(ctx: Context) {
     });
 
     ctx.on("handler/after/ProblemEditHandler#get", (handler: ProblemEditHandler) => {
-        handler.UiContext[UI_CONTEXT_ALLOW_DISTRIBUTE_PROBLEM_CHANGE] = ctx.setting.get(
+        getUiContext(handler).allowDistributeProblemChange = ctx.setting.get(
             getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange),
         ) as boolean;
     });

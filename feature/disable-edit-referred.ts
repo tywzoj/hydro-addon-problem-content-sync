@@ -7,7 +7,7 @@ import { CE_StringKey } from "../common/strings";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDisableEditReferred(ctx: Context) {
-    ctx.on("handler/before/ProblemEditHandler", (handler: ProblemEditHandler) => {
+    ctx.on("handler/before/ProblemEdit", (handler: ProblemEditHandler) => {
         if (!ctx.setting.get(getSettingKeys(CE_ConfigKey.DisableEditReferredProblem))) {
             return;
         }
@@ -16,7 +16,7 @@ export function applyDisableEditReferred(ctx: Context) {
         }
     });
 
-    ctx.on("handler/after/ProblemDetailHandler#get", (handler: ProblemDetailHandler) => {
+    ctx.on("handler/after/ProblemDetail#get", (handler: ProblemDetailHandler) => {
         handler.UiContext[UI_CONTEXT_DISABLE_EDIT_REFERRED_PROBLEM] = ctx.setting.get(
             getSettingKeys(CE_ConfigKey.DisableEditReferredProblem),
         ) as boolean;

@@ -5,7 +5,7 @@ export const enum CE_StringKey {
     AllowDistributeProblemChange = "Allow distribute problem change to other domains",
     DisableEditReferredProblem = "Disable edit referred problem",
     EditReferredProblem = "Edit referred problem",
-    ConfirmEditReferredProblem = "You can not edit a referred problem. Do you want to view the original problem instead?",
+    ConfirmEditReferredProblem = "You are not allowed to edit a referred problem. Do you want to view the original problem instead?",
 }
 
 const strings: Record<string, Record<CE_StringKey, string>> = {
@@ -14,14 +14,14 @@ const strings: Record<string, Record<CE_StringKey, string>> = {
         [CE_StringKey.AllowDistributeProblemChange]: "允许分发题目变更到其他域",
         [CE_StringKey.DisableEditReferredProblem]: "禁止编辑被引用的题目",
         [CE_StringKey.EditReferredProblem]: "编辑被引用的题目",
-        [CE_StringKey.ConfirmEditReferredProblem]: "您不能编辑被引用的题目。是否要查看原始题目？",
+        [CE_StringKey.ConfirmEditReferredProblem]: "您不被允许编辑被引用的题目。是否要查看原始题目？",
     },
     zh_TW: {
         [CE_StringKey.Title]: "題目內容同步插件",
         [CE_StringKey.AllowDistributeProblemChange]: "允許分發題目變更到其他域",
         [CE_StringKey.DisableEditReferredProblem]: "禁止編輯被引用的題目",
         [CE_StringKey.EditReferredProblem]: "編輯被引用的題目",
-        [CE_StringKey.ConfirmEditReferredProblem]: "您不能編輯被引用的題目。是否要查看原始題目？",
+        [CE_StringKey.ConfirmEditReferredProblem]: "您不被允許編輯被引用的題目。是否要查看原始題目？",
     },
 };
 

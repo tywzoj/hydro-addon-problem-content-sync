@@ -8,9 +8,7 @@ import { buildProblemContentUpdate, getUiContext } from "../common/utils";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDistributeChange(ctx: Context) {
-    ctx.on("handler/after/ProblemEdit", async (handler: ProblemEditHandler) => {
-        if (handler.request.method !== "POST") return;
-
+    ctx.on("handler/after/ProblemEdit#post", async (handler: ProblemEditHandler) => {
         if (!ctx.setting.get(getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange))) {
             return;
         }
@@ -20,9 +18,8 @@ export function applyDistributeChange(ctx: Context) {
         // so we need to get the latest problem document here.
         const pdoc = (await ProblemModel.get(handler.pdoc.domainId, handler.pdoc.docId))!;
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        const cursor = ProblemModel.getMulti(undefined /* do not set domainId filter */, {
+        const cursor = ProblemModel.getMulti("" /* will be overridden by query */, {
+            domainId: { $exists: true },
             reference: {
                 domainId: pdoc.domainId,
                 pid: pdoc.docId,

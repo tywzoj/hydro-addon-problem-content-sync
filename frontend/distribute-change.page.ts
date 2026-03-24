@@ -9,14 +9,15 @@ addPage(
         const { allowDistributeProblemChange, isOriginalProblem } = UiContext as IUiContext;
         if (allowDistributeProblemChange && isOriginalProblem) {
             $(".section__body form").find(".row").last().before(`
-<div class="row"><div class="column">
-    <label><br>
-        <label class="checkbox">
-            <input type="checkbox" name="${ARGS_DISTRIBUTE}" value="on" class="checkbox">
-            ${i18n(CE_StringKey.DistributeChange)}
-        </label>
-    </label>
-</div></div>`);
+                <div class="row"><div class="column">
+                    <label><br>
+                        <label class="checkbox">
+                            <input type="checkbox" name="${ARGS_DISTRIBUTE}" value="on" class="checkbox">
+                            ${i18n(CE_StringKey.DistributeChange)}
+                        </label>
+                    </label>
+                </div></div>
+            `);
         }
     }),
 );

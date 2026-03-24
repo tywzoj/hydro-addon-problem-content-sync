@@ -17,7 +17,7 @@ export const Config = Schema.object({
 }).description(CE_StringKey.Title);
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-export const PACKAGE_NAME = (require("../../package.json") as { name: string }).name;
+export const PACKAGE_NAME = (require("../package.json") as { name: string }).name;
 export function getSettingKeys(key: CE_ConfigKey): string {
     return `${PACKAGE_NAME}.${key}`;
 }

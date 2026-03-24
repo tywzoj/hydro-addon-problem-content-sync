@@ -14,3 +14,7 @@ export function buildProblemContentUpdate(source: ProblemDoc): Partial<ProblemDo
 export function getUiContext(handler: Handler): IUiContext {
     return (handler.UiContext ??= {} as IUiContext);
 }
+
+export type SnakeToPascal<S extends string> = S extends `${infer Head}_${infer Tail}`
+    ? `${Capitalize<Head>}${SnakeToPascal<Tail>}`
+    : Capitalize<S>;

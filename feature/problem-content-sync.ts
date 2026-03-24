@@ -1,25 +1,27 @@
 import { BadRequestError, type Context, ProblemModel, ProblemNotFoundError } from "hydrooj";
-import { ProblemEditHandler } from "hydrooj/src/handler/problem";
+import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
+import type { OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "../common/constants";
+import type { SnakeToPascal } from "../common/utils";
 import { buildProblemContentUpdate } from "../common/utils";
 
 declare module "hydrooj" {
-    class ProblemEditHandlerWithSync extends ProblemEditHandler {
-        postSyncWithOriginalProblem: () => Promise<void>;
-    }
-
     interface Context {
         withHandlerClass(
             handlerName: "ProblemEditHandler",
-            callback: (handler: typeof ProblemEditHandlerWithSync) => void,
+            callback: (HandlerClass: {
+                readonly prototype: {
+                    [k in `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}`]: () => Promise<void>;
+                };
+            }) => void,
         ): void;
     }
 }
 
 export function applyProblemContentSync(ctx: Context) {
-    ctx.withHandlerClass("ProblemEditHandler", (Handler) => {
-        Handler.prototype.postSyncWithOriginalProblem = async function () {
-            const handler = this as InstanceType<typeof Handler>;
+    ctx.withHandlerClass("ProblemEditHandler", (HandlerClass) => {
+        HandlerClass.prototype.postSyncWithOriginalProblem = async function () {
+            const handler = this as ProblemEditHandler;
 
             if (!handler.pdoc.reference) {
                 throw new BadRequestError("This problem does not reference another problem.");

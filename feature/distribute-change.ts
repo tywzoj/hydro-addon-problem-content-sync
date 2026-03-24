@@ -16,18 +16,18 @@ export function applyDistributeChange(ctx: Context) {
 
         // The problem document has been updated, but handler.pdoc is not updated yet,
         // so we need to get the latest problem document here.
-        const pdoc = (await ProblemModel.get(handler.pdoc.domainId, handler.pdoc.docId))!;
+        const ori_pdoc = (await ProblemModel.get(handler.pdoc.domainId, handler.pdoc.docId))!;
 
         const cursor = ProblemModel.getMulti("" /* will be overridden by query */, {
             domainId: { $exists: true },
             reference: {
-                domainId: pdoc.domainId,
-                pid: pdoc.docId,
+                domainId: ori_pdoc.domainId,
+                pid: ori_pdoc.docId,
             },
         });
 
         for await (const pdoc of cursor) {
-            await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(pdoc));
+            await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
             await MessageModel.sendInfo(
                 handler.user._id,
                 JSON.stringify({

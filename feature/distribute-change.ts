@@ -17,6 +17,7 @@ export function applyDistributeChange(ctx: Context) {
         // It is not easy to check the permission for each referred problem in other domains,
         // so we only allow users with MANAGE_ALL_DOMAIN privilege to perform distribute change operation.
         if (!handler.user.hasPriv(PRIV.PRIV_MANAGE_ALL_DOMAIN)) {
+            handler.response.redirect = undefined; // prevent redirecting to the edited problem page
             throw new PermissionError(CE_StringKey.DistributeChangeNoPrivilege);
         }
 

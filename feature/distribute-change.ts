@@ -1,5 +1,5 @@
 import type { Context } from "hydrooj";
-import { PermissionError, PRIV, ProblemModel } from "hydrooj";
+import { PRIV, PrivilegeError, ProblemModel } from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
 import { ARGS_DISTRIBUTE } from "../common/constants";
@@ -18,7 +18,7 @@ export function applyDistributeChange(ctx: Context) {
         // so we only allow users with MANAGE_ALL_DOMAIN privilege to perform distribute change operation.
         if (!handler.user.hasPriv(PRIV.PRIV_MANAGE_ALL_DOMAIN)) {
             handler.response.redirect = undefined; // prevent redirecting to the edited problem page
-            throw new PermissionError(CE_StringKey.DistributeChangeNoPrivilege);
+            throw new PrivilegeError(CE_StringKey.DistributeChangeNoPrivilege);
         }
 
         // The problem document has been updated, but handler.pdoc is not updated yet,

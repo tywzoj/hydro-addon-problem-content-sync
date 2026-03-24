@@ -8,7 +8,9 @@ import { buildProblemContentUpdate, getUiContext } from "../common/utils";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDistributeChange(ctx: Context) {
-    ctx.on("handler/after/ProblemEdit#post", async (handler: ProblemEditHandler) => {
+    ctx.on("handler/after/ProblemEdit", async (handler: ProblemEditHandler) => {
+        if (handler.request.method !== "POST") return;
+
         if (!ctx.setting.get(getSettingKeys(CE_ConfigKey.AllowDistributeProblemChange))) {
             return;
         }

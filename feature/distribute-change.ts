@@ -1,5 +1,5 @@
 import type { Context } from "hydrooj";
-import { MessageModel, ProblemModel } from "hydrooj";
+import { ProblemModel } from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
 import { ARGS_DISTRIBUTE } from "../common/constants";
@@ -28,13 +28,7 @@ export function applyDistributeChange(ctx: Context) {
 
         for await (const pdoc of cursor) {
             await ProblemModel.edit(pdoc.domainId, pdoc.docId, buildProblemContentUpdate(ori_pdoc));
-            await MessageModel.sendInfo(
-                handler.user._id,
-                JSON.stringify({
-                    message: CE_StringKey.DistributeChangeNotice,
-                    params: [pdoc.pid, pdoc.domainId],
-                }),
-            );
+            handler.progress(CE_StringKey.DistributeChangeNotice, [pdoc.pid, pdoc.domainId]);
         }
     });
 

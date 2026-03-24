@@ -15,6 +15,11 @@ export function getUiContext(handler: Handler): IUiContext {
     return (handler.UiContext ??= {} as IUiContext);
 }
 
+export function isProblemSyncOperation(handler: Handler): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return handler.request.method === "post" && handler.request.body.operation === "sync_with_original_problem";
+}
+
 export type SnakeToPascal<S extends string> = S extends `${infer Head}_${infer Tail}`
     ? `${Capitalize<Head>}${SnakeToPascal<Tail>}`
     : Capitalize<S>;

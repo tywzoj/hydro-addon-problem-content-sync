@@ -3,7 +3,7 @@ import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
 import type { OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "../common/constants";
 import type { SnakeToPascal } from "../common/utils";
-import { buildProblemContentUpdate } from "../common/utils";
+import { buildProblemContentUpdate, isProblemSyncOperation } from "../common/utils";
 
 declare module "hydrooj" {
     interface Context {
@@ -11,7 +11,9 @@ declare module "hydrooj" {
             handlerName: "ProblemEditHandler",
             callback: (HandlerClass: {
                 readonly prototype: {
-                    [k in `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}`]: () => Promise<void>;
+                    [k in
+                        | `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}`
+                        | "post"]: () => Promise<void> | void;
                 };
             }) => void,
         ): void;
@@ -20,6 +22,11 @@ declare module "hydrooj" {
 
 export function applyProblemContentSync(ctx: Context) {
     ctx.withHandlerClass("ProblemEditHandler", (HandlerClass) => {
+        const originalPost = HandlerClass.prototype.post;
+        HandlerClass.prototype.post = function (...args) {
+            if (isProblemSyncOperation(this as ProblemEditHandler)) return;
+            return originalPost.apply(this, args);
+        };
         HandlerClass.prototype.postSyncWithOriginalProblem = async function () {
             const handler = this as ProblemEditHandler;
 

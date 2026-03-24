@@ -2,18 +2,13 @@ import type { Context } from "hydrooj";
 import { PrivilegeError } from "hydrooj";
 import type { ProblemDetailHandler, ProblemEditHandler } from "hydrooj/src/handler/problem";
 
-import { OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "../common/constants";
 import { CE_StringKey } from "../common/strings";
-import { getUiContext } from "../common/utils";
+import { getUiContext, isProblemSyncOperation } from "../common/utils";
 import { CE_ConfigKey, getSettingKeys } from "./config";
 
 export function applyDisableEditReferred(ctx: Context) {
     ctx.on("handler/before/ProblemEdit", (handler: ProblemEditHandler) => {
-        if (
-            handler.request.method === "post" &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            handler.request.body?.operation === OPER_SYNC_WITH_ORIGINAL_PROBLEM
-        ) {
+        if (isProblemSyncOperation(handler)) {
             // Allow syncing content even if editing referred problem is disabled.
             return;
         }

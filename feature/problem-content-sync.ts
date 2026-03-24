@@ -11,9 +11,7 @@ declare module "hydrooj" {
             handlerName: "ProblemEditHandler",
             callback: (HandlerClass: {
                 readonly prototype: {
-                    [k in
-                        | `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}`
-                        | "post"]: () => Promise<void> | void;
+                    [k in `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}` | "post"]: () => unknown;
                 };
             }) => void,
         ): void;
@@ -22,11 +20,6 @@ declare module "hydrooj" {
 
 export function applyProblemContentSync(ctx: Context) {
     ctx.withHandlerClass("ProblemEditHandler", (HandlerClass) => {
-        const originalPost = HandlerClass.prototype.post;
-        HandlerClass.prototype.post = function (...args) {
-            if (isProblemSyncOperation(this as ProblemEditHandler)) return;
-            return originalPost.apply(this, args);
-        };
         HandlerClass.prototype.postSyncWithOriginalProblem = async function () {
             const handler = this as ProblemEditHandler;
 
@@ -43,6 +36,13 @@ export function applyProblemContentSync(ctx: Context) {
             await ProblemModel.edit(handler.pdoc.domainId, handler.pdoc.docId, buildProblemContentUpdate(ori_pdoc));
 
             handler.back();
+        };
+
+        // The lifecycle is post() -> postSyncWithOriginalProblem(), so we must override post to skip sync operation.
+        const originalPost = HandlerClass.prototype.post;
+        HandlerClass.prototype.post = function (...args) {
+            if (isProblemSyncOperation(this as ProblemEditHandler)) return;
+            return originalPost.apply(this, args);
         };
     });
 }

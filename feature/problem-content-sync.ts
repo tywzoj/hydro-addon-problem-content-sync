@@ -8,22 +8,7 @@ import {
 } from "hydrooj";
 import type { ProblemEditHandler } from "hydrooj/src/handler/problem";
 
-import type { OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "../common/constants";
-import type { SnakeToPascal } from "../common/utils";
 import { buildProblemContentUpdate, isProblemSyncOperation } from "../common/utils";
-
-declare module "hydrooj" {
-    interface Context {
-        withHandlerClass(
-            handlerName: "ProblemEditHandler",
-            callback: (HandlerClass: {
-                readonly prototype: {
-                    [k in `post${SnakeToPascal<typeof OPER_SYNC_WITH_ORIGINAL_PROBLEM>}` | "post"]: () => unknown;
-                };
-            }) => void,
-        ): void;
-    }
-}
 
 export function applyProblemContentSync(ctx: Context) {
     // We want to reuse the permission checker in ProblemEditHandler,
@@ -31,7 +16,7 @@ export function applyProblemContentSync(ctx: Context) {
     // instead of creating a new route and handler.
     ctx.withHandlerClass("ProblemEditHandler", (HandlerClass) => {
         HandlerClass.prototype.postSyncWithOriginalProblem = async function () {
-            const handler = this as ProblemEditHandler;
+            const handler = this as unknown as ProblemEditHandler;
 
             if (!handler.pdoc.reference) {
                 throw new BadRequestError("This problem does not reference another problem.");
@@ -57,7 +42,8 @@ export function applyProblemContentSync(ctx: Context) {
         // The lifecycle is post() -> postSyncWithOriginalProblem(), so we must override post to skip sync operation.
         const originalPost = HandlerClass.prototype.post;
         HandlerClass.prototype.post = function (...args) {
-            if (isProblemSyncOperation(this as ProblemEditHandler)) return;
+            const handler = this as unknown as ProblemEditHandler;
+            if (isProblemSyncOperation(handler)) return;
             return originalPost.apply(this, args);
         };
     });

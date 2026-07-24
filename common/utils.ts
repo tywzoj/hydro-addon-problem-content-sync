@@ -20,6 +20,11 @@ export function isProblemSyncOperation(handler: Handler): boolean {
     return handler.request.method === "post" && handler.request.body.operation === "sync_with_original_problem";
 }
 
+export function isProblemChangeIdOperation(handler: Handler): boolean {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    return handler.request.method === "post" && handler.request.body.operation === "change_problem_id";
+}
+
 export type SnakeToPascal<S extends string> = S extends `${infer Head}_${infer Tail}`
     ? `${Capitalize<Head>}${SnakeToPascal<Tail>}`
     : Capitalize<S>;

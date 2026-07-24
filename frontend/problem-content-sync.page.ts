@@ -24,7 +24,7 @@ addPage(
                     });
                 });
 
-                $('<li class="menu__item">').add(form).insertAfter(editItem);
+                $('<li class="menu__item">').append(form).insertAfter(editItem);
             }
         }
     }),

@@ -1,3 +1,6 @@
+import type { OPER_CHANGE_PROBLEM_ID, OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "./constants";
+import type { SnakeToPascal } from "./utils";
+
 export interface IUiContext {
     disableEditReferredProblem?: boolean;
     originalProblemUrl?: string;
@@ -5,9 +8,6 @@ export interface IUiContext {
     isOriginalProblem?: boolean;
     pdoc?: { pid?: string };
 }
-
-import type { OPER_CHANGE_PROBLEM_ID, OPER_SYNC_WITH_ORIGINAL_PROBLEM } from "./constants";
-import type { SnakeToPascal } from "./utils";
 
 declare module "hydrooj" {
     interface Context {

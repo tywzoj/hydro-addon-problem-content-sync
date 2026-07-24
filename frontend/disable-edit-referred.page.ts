@@ -26,9 +26,9 @@ addPage(
 
             if (pageName === "problem_detail" && editItem.length > 0) {
                 const button = $(`
-                        <a href="javascript:void(0);" class="menu__link">
+                        <button type="button" class="menu__link">
                             <span class="icon icon-edit"></span> ${i18n(CE_StringKey.ChangeProblemId)}
-                        </a>
+                        </button>
                     `).on("click", () => {
                     void prompt(
                         i18n(CE_StringKey.ChangeProblemId),

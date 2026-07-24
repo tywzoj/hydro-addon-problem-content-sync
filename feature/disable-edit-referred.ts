@@ -9,7 +9,7 @@ import { CE_ConfigKey, getSettingKeys } from "./config";
 export function applyDisableEditReferred(ctx: Context) {
     ctx.on("handler/before/ProblemEdit", (handler: ProblemEditHandler) => {
         if (isProblemSyncOperation(handler) || isProblemChangeIdOperation(handler)) {
-            // Allow syncing content even if editing referred problem is disabled.
+            // Allow sync / change-id operations even if editing referred problem is disabled.
             return;
         }
 
@@ -54,6 +54,11 @@ export function applyDisableEditReferred(ctx: Context) {
             }
 
             const handler = this as unknown as ProblemEditHandler;
+
+            if (handler.pdoc.pid === pid) {
+                handler.back();
+                return;
+            }
 
             if (await ProblemModel.get(domainId, pid)) {
                 throw new ProblemAlreadyExistError(pid);
